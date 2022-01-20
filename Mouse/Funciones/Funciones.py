@@ -33,12 +33,22 @@ class Funciones_Globales():
         t = time.sleep(Tiempo)
         return t
 
+    def SELXPATH(self,tipo,selector):
+        if(tipo == "xpath"):
+            val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.XPATH, selector)))
+            val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
+            val = self.driver.find_element(By.XPATH, selector)
+        elif(tipo == "id"):
+            val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.ID, selector)))
+            val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
+            val = self.driver.find_element(By.ID, selector)
+        return val
+
+
     def Texto_Mixto(self, tipo, selector, texto, tiempo):
         if (tipo == "xpath"):
             try:
-                val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.XPATH, selector)))
-                val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                val = self.driver.find_element(By.XPATH, selector)
+                val = self.SELXPATH(tipo,selector)
                 val.clear()
                 val.send_keys(texto)
                 print("Escribiendo en el campo {} el texto -> {} ".format(selector, texto))
@@ -50,9 +60,7 @@ class Funciones_Globales():
                 return t
         elif (tipo == "id"):
             try:
-                val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.ID, selector)))
-                val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                val = self.driver.find_element(By.ID, selector)
+                val = self.SELXPATH(tipo, selector)
                 val.clear()
                 val.send_keys(texto)
                 print("Escribiendo en el campo {} el texto -> {} ".format(selector, texto))
@@ -66,9 +74,7 @@ class Funciones_Globales():
     def Click_Mixto(self, tipo, selector, tiempo):
             if (tipo == "xpath"):
                 try:
-                    val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.XPATH, selector)))
-                    val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                    val = self.driver.find_element(By.XPATH, selector)
+                    val = self.SELXPATH(tipo,selector)
                     val.click()
                     print("dando click en {} -> {} ".format(selector, selector))
                     t = time.sleep(tiempo)
@@ -79,9 +85,7 @@ class Funciones_Globales():
                     return t
             elif (tipo == "id"):
                 try:
-                    val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.ID, selector)))
-                    val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                    val = self.driver.find_element(By.ID, selector)
+                    val = self.SELXPATH(tipo,selector)
                     val.click()
                     print("dando click en {} -> {} ".format(selector, selector))
                     t = time.sleep(tiempo)
@@ -94,9 +98,7 @@ class Funciones_Globales():
     def Existe(self,tipo,selector,tiempo):
         if (tipo == "xpath"):
             try:
-                val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.XPATH, selector)))
-                val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                val = self.driver.find_element(By.XPATH, selector)
+                val = self.SELXPATH(tipo,selector)
                 val.click()
                 print("El elemento {} -> existe ".format(selector))
                 t = time.sleep(tiempo)
@@ -107,9 +109,7 @@ class Funciones_Globales():
                 return "No Existe"
         elif (tipo == "id"):
                 try:
-                    val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.ID, selector)))
-                    val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                    val = self.driver.find_element(By.ID, selector)
+                    val = self.SELXPATH(tipo,selector)
                     val.click()
                     print("El elemento {} -> existe ".format(selector))
                     t = time.sleep(tiempo)
@@ -119,21 +119,20 @@ class Funciones_Globales():
                     print("No se encontro el Elemento" + selector)
                     return "No Existe"
 
-    def Doble_Click(self, tipo, selector, tiempo):
+    def Click_Mouse(self, tipo, selector, tiempo):
         if (tipo == "xpath"):
             try:
-                val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.XPATH, selector)))
-                val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                val = self.driver.find_element(By.XPATH, selector)
+                val = self.SELXPATH(tipo,selector)
 
 
                 act = ActionChains(self.driver)
-                act.move_to_element(val).click().perform()
 
-                if(selector == "doubleClickBtn"):
+                if (selector == "doubleClickBtn"):
                     act.double_click(val).click().perform()
-
-                print("Click en el boton {}".format(selector))
+                    print("Dando doble-click en el elemento {}".format(selector))
+                if (selector == 'rightClickBtn'):
+                    act.context_click(val).click().perform()
+                    print("Dando click-derecho en el elemento {}".format(selector))
                 t = time.sleep(tiempo)
                 return t
             except TimeoutException as ex:
@@ -142,14 +141,44 @@ class Funciones_Globales():
                 return t
         elif (tipo == "id"):
             try:
-                val = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.ID, selector)))
-                val = self.driver.execute_script("arguments[0].scrollIntoView();", val)
-                val = self.driver.find_element(By.ID, selector)
+                val = self.SELXPATH(tipo,selector)
                 act = ActionChains(self.driver)
-                act.move_to_element(val).click().perform()
+
 
                 if (selector == "doubleClickBtn"):
                     act.double_click(val).click().perform()
+                    print("Dando doble-click en el elemento {}".format(selector))
+                if (selector == 'rightClickBtn'):
+                    act.context_click(val).click().perform()
+                    print("Dando click-derecho en el elemento {}".format(selector))
+                t = time.sleep(tiempo)
+                return t
+            except TimeoutException as ex:
+                print(ex.msg)
+                print("No se encontro el Elemento" + selector)
+                return t
+
+    def Drag_Drop(self, tipo,selector,destino,tiempo):
+        if (tipo == "xpath"):
+            try:
+                val = self.SELXPATH(tipo, selector)
+                val2 = self.SELXPATH(tipo, destino)
+                act = ActionChains(self.driver)
+                act.drag_and_drop(val,val2).perform()
+                print("Moviendo el elemento {} => {}".format(selector, destino))
+                t = time.sleep(tiempo)
+                return t
+            except TimeoutException as ex:
+                print(ex.msg)
+                print("No se encontro el Elemento" + selector)
+                return t
+        elif (tipo == "id"):
+            try:
+                val = self.SELXPATH(tipo, selector)
+                val2 = self.SELXPATH(tipo, destino)
+                act = ActionChains(self.driver)
+                act.drag_and_drop(val, val2).perform()
+                print("Moviendo el elemento {} => {}".format(selector, destino))
                 t = time.sleep(tiempo)
                 return t
             except TimeoutException as ex:

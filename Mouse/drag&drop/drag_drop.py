@@ -23,22 +23,18 @@ class base_test(unittest.TestCase):
     def test(self):
         driver = self.driver
         f = Funciones_Globales(driver)
-        f.navegar("https://demoqa.com/buttons", tg)
-        f.Click_Mouse("id", "details-button", tg)
-        f.Click_Mouse("id", "proceed-link", tg)
-        f.Click_Mouse("id", "doubleClickBtn", tg)
-        #Hacer Click Derecho
-        f.Click_Mouse("id", "rightClickBtn", tg)
+        f.navegar("https://demo.guru99.com/test/drag_drop.html#google_vignette", tg)
+
+        f.Drag_Drop("id", "credit1", "loan", tg)
+        f.Drag_Drop("id", "credit2", "bank", tg)
+        f.Drag_Drop("id", "fourth", "amt7", tg)
+        f.Drag_Drop("id", "fourth", "amt8", tg)
 
 
-
-
-
-        time.sleep(tg)
+    time.sleep(tg)
 
     def tearDown(self):
         self.driver.quit()
-
 
     if __name__ == '__main__':
         unittest.main()
