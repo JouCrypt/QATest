@@ -1,0 +1,27 @@
+# Importar la libreria de webdriver
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+# Cargar el driver
+from selenium.webdriver.chrome.service import Service
+
+s = Service("C:\Drivers\chromedriver\chromedriver.exe")
+driver = webdriver.Chrome(service=s)
+
+# Maximizar el navegador
+driver.maximize_window()
+
+# Acceder a la url https://demoqa.com/
+driver.get("https://demoqa.com/")
+
+# Imprimir
+print(driver.title)
+
+# Finalizar el driver
+driver.close()
+
+
+
+#regresar 2 paginas
+
+driver.execute_script("window.history.go(2)")
